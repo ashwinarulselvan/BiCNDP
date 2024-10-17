@@ -1,6 +1,6 @@
 import cplex
-import geninstance
-import BiCNDP_callbacks
+from geninstance import *
+from BiCNDP_callbacks import *
 import numpy as np
 import matplotlib as plt
 import networkx as nx
@@ -11,11 +11,6 @@ from cplex.exceptions import CplexSolverError
 import cplex.callbacks as CPX_CB
 from cplex.callbacks import UserCutCallback, LazyConstraintCallback, IncumbentCallback, BranchCallback
 from datetime import datetime
-
-
-
-
-
 
 def biCNDP(**kwargs):
     # Getting the current date and time
@@ -28,14 +23,18 @@ def biCNDP(**kwargs):
            'edge_density':0.2, 'ws_param':0.05, 
            'itemcosts':50, 'budgetprop':0.6, 
            'dbug':True, 'test':True, 'ccut':True}
+
     for key,value in kwargs.items():
+            if key == 'numnodes' or key == 'test' or key == 'dbug' or key=='ccut':value = int(value)
+            else: value = float(value)
             inp[key] = value    
-        
+    
     random.seed(ts)
     DBUG = inp['dbug']
     I = genInput()
     I.initialise_data(numnodes=inp['numnodes'], test=inp['test'])
     n=I.N
+    print ("Size of GRAPH=====================", n)
     ccut = inp['ccut']
 
     cpx = cplex.Cplex()
@@ -304,3 +303,7 @@ def biCNDP(**kwargs):
     print ("Total xvars picked", xvals, yvals, zvals)
     obj = cpx.solution.get_objective_value()
     print ("objective:", obj, mip.get_mip_relative_gap())
+
+
+if __name__ == "__main__":
+    biCNDP(**dict(arg.split('=') for arg in sys.argv[1:]))
