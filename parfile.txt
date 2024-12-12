@@ -1,0 +1,12 @@
+numnodes 40
+gtype er
+p  0.15
+edge_density 0.2
+ws_param 0.1
+itemcosts 1
+budgetprop 0.3
+dbug 0
+test 0
+ccut 1
+os m
+file 2
